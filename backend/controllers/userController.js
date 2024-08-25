@@ -46,8 +46,18 @@ const getReadPosts = async (req, res) => {
   }
 };
 
+const getUserPostCount = async (req, res) => {
+    try {
+        const postCount = await Post.countDocuments({ author: req.user.id }); // Count posts
+        res.status(200).json({ postCount });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch post count' });
+    }
+};
+
 module.exports = {
   getUserProfile,
   markPostAsRead,
   getReadPosts,
+  getUserPostCount,
 };

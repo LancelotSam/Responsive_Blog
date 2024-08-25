@@ -1,11 +1,12 @@
 // backend/server.js
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors'); 
+const cors = require('cors');
+const setupSwaggerDocs = require('./swagger');
 const connectDB = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
-const commentRoutes = require('./routes/commentRoutes');
+const userRoutes = require('./routes/userRoutes');
 const path = require('path');
 
 dotenv.config();
@@ -27,7 +28,9 @@ connectDB();
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
-app.use('/api/comments', commentRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/image', postRoutes)
+
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
@@ -35,10 +38,10 @@ app.get('/', (req, res) => {
   res.send('Backend Blog Post API is running...');
 });
 
-// Define the server variable
+setupSwaggerDocs(app, PORT); // Initialize Swagger docs
+
 const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// Export both app and server
 module.exports = { app, server };
